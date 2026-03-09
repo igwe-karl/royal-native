@@ -47,7 +47,7 @@ export default function ProfileScreen() {
       <View style={styles.header}>
         <Image
           source={{
-            uri: "https://i.pravatar.cc/300", // temporary avatar
+            uri: "https://i.pravatar.cc/300", 
           }}
           style={styles.avatar}
         />
@@ -80,7 +80,6 @@ export default function ProfileScreen() {
         <Button
           variant="ghost"
           onPress={handleLogout}
-        // style={styles.logoutButton}
         >
           <IconSymbol
             size={22}
