@@ -1,31 +1,70 @@
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { View, Text, Button, StyleSheet } from 'react-native';
+// screens/RegisterScreen.tsx
+import { Button } from "@/components/ui/button";
+import TextInput from "@/components/ui/input";
+import React, { useState } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 
 export default function RegisterScreen() {
-    return (
-        <View style={registerStyles.container}>
-            {/* <Image source={require('@/assets/images/logo.png')} style={registerStyles.logo} /> */}
-            <IconSymbol size={100} name="crown.fill" color="black" />
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [password, setPassword] = useState("");
 
-            <input type="text" placeholder="first name" />
-            <input type="text" placeholder="last name" />
-            <input type="text" placeholder="email" />
-            <input type="text" placeholder="password" />
-            <input type="text" placeholder="confirm password" />
-            <Text style={registerStyles.title}>Register</Text>
-            <Button title="Register" onPress={() => { }} />
-        </View>
+    const handleRegister = () => {
+        console.log({ fullName, email, phone, password });
+    };
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <Text style={styles.title}>Create Account 🚀</Text>
+
+            <TextInput
+                value={fullName}
+                onChangeText={setFullName}
+                placeholder="Full Name"
+            />
+
+            <TextInput
+                value={email}
+                onChangeText={setEmail}
+                placeholder="Email Address"
+            />
+
+            <TextInput
+                value={phone}
+                onChangeText={setPhone}
+                placeholder="Phone Number"
+                type="number"
+            />
+
+            <TextInput
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Password"
+            />
+
+            <Button onPress={handleRegister} >Register</Button>
+
+            <Button
+                variant="outline"
+                onPress={() => console.log("Go to Login")}
+            >Already have an account?</Button>
+        </SafeAreaView>
     );
 }
 
-const registerStyles = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        padding: 24,
+        justifyContent: "center",
     },
     title: {
-        fontSize: 24,
-        fontWeight: 'bold',
+        fontSize: 28,
+        fontWeight: "700",
+        marginBottom: 30,
+        textAlign: "center",
     },
 });

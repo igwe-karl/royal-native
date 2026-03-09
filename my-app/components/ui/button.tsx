@@ -13,7 +13,7 @@ type Variant = "primary" | "secondary" | "outline" | "ghost";
 type Size = "sm" | "md" | "lg";
 
 type ButtonProps = {
-  title: string;
+  children: string;
   onPress?: () => void;
   variant?: Variant;
   size?: Size;
@@ -22,7 +22,7 @@ type ButtonProps = {
 };
 
 export function Button({
-  title,
+  children,
   onPress,
   variant = "primary",
   size = "md",
@@ -54,7 +54,7 @@ export function Button({
       {loading ? (
         <ActivityIndicator color="#fff" />
       ) : (
-        <Text style={textStyles}>{title}</Text>
+        <Text style={textStyles}>{children}</Text>
       )}
     </Pressable>
   );
