@@ -49,6 +49,7 @@ export default function OrdersScreen() {
       </Collapsible>
 
       <Button onPress={() => router.push('../screens/login')}>Log in no </Button>
+      <Button onPress={() => router.push('../screens/register')}>register</Button>
     </ParallaxScrollView>
   );
 }

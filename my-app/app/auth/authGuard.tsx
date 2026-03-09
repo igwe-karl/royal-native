@@ -1,9 +1,8 @@
-import { useContext } from "react";
-import { View, Text } from "react-native";
-import AuthContext from "./authContext";
+import { Text } from "react-native";
+import { useAuth } from "./authContext";
 
 function AuthGuard({ children }: any) {
-  const { userToken } = useContext(AuthContext);
+  const { userToken } = useAuth();
 
   if (!userToken) return <Text>Please login</Text>;
 

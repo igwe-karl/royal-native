@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { saveTokens, clearTokens, getAccessToken } from "../storage/tokenStorage";
-import { loginApi, registerApi } from "../api/auth.api";
+import { saveAccessToken, getAccessToken, clearAccessToken } from "../storage/tokenStorage";
+import { api } from "../api/client";
+import { showToast } from "@/utils/toast";
 
 type AuthContextType = {
   userToken: string | null;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string, deviceToken?: string) => Promise<void>;
+  register: (fname: string, lname: string, email: string, pnumber: number, password: string, deviceToken?: string) => Promise<void>;
   logout: () => Promise<void>;
 };
 
@@ -21,24 +22,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     })();
   }, []);
 
-  const login = async (email: string, password: string) => {
-    const res = await loginApi(email, password);
-    console.log(res, "res")
-    const { accessToken, refreshToken } = res.data;
-    await saveTokens(accessToken, refreshToken);
-    setUserToken(accessToken);
+  const login = async (email: string, password: string, deviceToken?: string) => {
+    try {
+      const res = await api.post("/auth/users", { email, password, deviceTokens: deviceToken });
+      const { token } = res.data;
+
+      if (!token) throw new Error("Token missing from server response");
+
+      await saveAccessToken(token);
+      setUserToken(token);
+      showToast("Login successful! 🎉", "success"); // ✅ Show toast
+
+    } catch (error: any) {
+      console.log("Login error ❌", error.response?.data ?? error.message);
+      throw error;
+    }
   };
 
-  const register = async (email: string, password: string) => {
-    const res = await registerApi(email, password);
-    const { accessToken, refreshToken } = res.data;
-    await saveTokens(accessToken, refreshToken);
-    setUserToken(accessToken);
+  // REGISTER
+  const register = async (fname: string, lname: string, email: string, pnumber: number, password: string, deviceToken?: string) => {
+    try {
+      const res = await api.post("/users", { fname, lname, pnumber, email, password, deviceTokens: deviceToken });
+      const { token } = res.data;
+
+      if (!token) throw new Error("Token missing from server response");
+
+      await saveAccessToken(token);
+      setUserToken(token);
+
+      showToast("Registeration successful! 🎉", "success"); // ✅ Show toast
+    } catch (error: any) {
+      console.log("Register error ❌", error.response?.data ?? error.message);
+      throw error;
+    }
   };
 
   const logout = async () => {
-    await clearTokens();
+    await clearAccessToken();
     setUserToken(null);
+    showToast("Log Out successful! 🎉", "success"); // ✅ Show toast
   };
 
   return (
@@ -49,9 +71,5 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider.");
-  }
-  return context;
+  return useContext(AuthContext);
 }

@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
   
     /* Variants */
     primary: {
-      backgroundColor: "#ED6C00",
+      backgroundColor: "#7F1945",
     },
     secondary: {
       backgroundColor: "#2C599D",
