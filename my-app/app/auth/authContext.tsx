@@ -6,7 +6,7 @@ import { showToast } from "@/utils/toast";
 type AuthContextType = {
   userToken: string | null;
   login: (email: string, password: string, deviceToken?: string) => Promise<void>;
-  register: (fname: string, lname: string, email: string, pnumber: number, password: string, deviceToken?: string) => Promise<void>;
+  register: (fname: string, lname: string, email: string, pnumber: string, password: string, deviceToken?: string) => Promise<void>;
   logout: () => Promise<void>;
 };
 
@@ -40,7 +40,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   // REGISTER
-  const register = async (fname: string, lname: string, email: string, pnumber: number, password: string, deviceToken?: string) => {
+  const register = async (fname: string, lname: string, email: string, pnumber: string, password: string, deviceToken?: string) => {
     try {
       const res = await api.post("/users", { fname, lname, pnumber, email, password, deviceTokens: deviceToken });
       const { token } = res.data;

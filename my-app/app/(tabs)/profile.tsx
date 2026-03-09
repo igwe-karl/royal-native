@@ -1,112 +1,169 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+// screens/ProfileScreen.tsx
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Pressable,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
+import { router, useRouter } from "expo-router";
+import { Button } from "@/components/ui/button";
+import { IconSymbol } from "@/components/ui/icon-symbol";
+import { useAuth } from "../auth/authContext";
 
-import { Collapsible } from '@/components/ui/collapsible';
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+const MENU_ITEMS = [
+  {
+    title: "Settings",
+    icon: "settings-outline",
+    route: "/(tabs)/profile",
+  },
+  {
+    title: "My Addresses",
+    icon: "location-outline",
+    route: "/(tabs)/explore",
+  },
+  {
+    title: "Orders",
+    icon: "receipt-outline",
+    route: "/(tabs)/orders",
+  },
+];
 
 export default function ProfileScreen() {
+
+  const { logout } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logout();
+    router.replace("/screens/login");
+  };
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
-        </ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
+    <SafeAreaView style={styles.container}>
+      {/* Avatar Section */}
+      <View style={styles.header}>
         <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
+          source={{
+            uri: "https://i.pravatar.cc/300", // temporary avatar
+          }}
+          style={styles.avatar}
         />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+        <Text style={styles.name}>John Doe</Text>
+        <Text style={styles.email}>johndoe@email.com</Text>
+      </View>
+
+      {/* Menu Section */}
+      <View style={styles.menu}>
+        {MENU_ITEMS.map((item) => (
+          <Pressable
+            key={item.title}
+            style={styles.menuItem}
+          // onPress={() => router.push(item.route)}
+          >
+            <View style={styles.menuLeft}>
+              <Ionicons name={item.icon as any} size={22} color="#ED6C00" />
+              <Text style={styles.menuText}>{item.title}</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="#999" />
+          </Pressable>
+        ))}
+      </View>
+
+      <View style={styles.booking}>
+        <Text style={styles.bookingText}>Booking History</Text>
+      </View>
+
+      <View style={styles.logoutContainer}>
+        <Button
+          variant="ghost"
+          onPress={handleLogout}
+        // style={styles.logoutButton}
+        >
+          <IconSymbol
+            size={22}
+            color="#7F1945"
+            name="rectangle.portrait.and.arrow.right"
+            />
+          <Text >Log out</Text>
+        </Button>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flex: 1,
+    // backgroundColor: "#0F172A",
   },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
+
+  /* Header */
+  header: {
+    alignItems: "center",
+    paddingVertical: 40,
+    borderBottomWidth: 1,
+    borderBottomColor: "#1E293B",
   },
+  avatar: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    marginBottom: 16,
+  },
+  name: {
+    fontSize: 22,
+    fontWeight: "700",
+    // color: "white",
+  },
+  email: {
+    fontSize: 14,
+    color: "#94A3B8",
+    marginTop: 4,
+  },
+
+  /* Menu */
+  menu: {
+    paddingHorizontal: 16,
+    paddingTop: 20,
+  },
+  menuItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    // backgroundColor: "#1E293B",
+    padding: 18,
+    borderRadius: 14,
+    marginBottom: 14,
+  },
+  menuLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  menuText: {
+    fontSize: 16,
+    // color: "white",
+    fontWeight: "600",
+  },
+  logoutContainer: {
+    marginTop: 30,
+    paddingHorizontal: 20,
+  },
+  booking: {
+    paddingHorizontal: 16,
+
+    alignItems: "flex-start",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  bookingText: {
+    paddingHorizontal: 16,
+
+    alignItems: "flex-start",
+    fontSize: 16,
+    fontWeight: "600",
+  }
 });

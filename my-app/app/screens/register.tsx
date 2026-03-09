@@ -106,7 +106,7 @@ export default function RegisterScreen() {
             <Button onPress={handleRegister}>Register</Button>
 
             <Button
-              variant="outline"
+              variant="ghost"
               onPress={() => router.back()}
             >
               Already have an account?

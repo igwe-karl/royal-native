@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import {
   Pressable,
   Text,
@@ -13,7 +13,7 @@ type Variant = "primary" | "secondary" | "outline" | "ghost";
 type Size = "sm" | "md" | "lg";
 
 type ButtonProps = {
-  children: string;
+  children: ReactNode;
   onPress?: () => void;
   variant?: Variant;
   size?: Size;
