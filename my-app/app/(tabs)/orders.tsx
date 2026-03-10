@@ -1,68 +1,131 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { Collapsible } from '@/components/ui/collapsible';
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import BookingHistoryCard from '@/components/bookingHistoryCard';
+import { Ionicons } from "@expo/vector-icons";
+import SearchInput from '@/components/ui/searchBar';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { router } from 'expo-router';
 
 export default function OrdersScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
-        </ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
+  const [search, setSearch] = useState("");
 
-      <Button onPress={() => router.push('../screens/login')}>Log in no </Button>
-      <Button onPress={() => router.push('../screens/register')}>register</Button>
-    </ParallaxScrollView>
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}>
+
+        <View style={styles.header}>
+          <View style={[styles.iconContainer, { backgroundColor: "grey" }]}>
+            <Ionicons name={'person'} size={22} color={""} />
+          </View>
+
+          <Text style={styles.name}>Hello Edikan</Text>
+          <View style={[styles.iconContainer, { backgroundColor: "" }]}>
+            <Ionicons name={'notifications-outline'} size={24} color={""} />
+          </View>
+        </View>
+
+        <View style={styles.search}>
+          <SearchInput value={search}
+            onChangeText={setSearch}
+            placeholder="Search deliveries"></SearchInput>
+        </View>
+
+        <View style={styles.mapContainer}>
+          <Text style={styles.name}>Carriers near you</Text>
+          <Image
+            source={require("../../assets/images/map.png")}
+            style={styles.mapImage}
+          />
+        </View>
+
+        <View>
+          <Button onPress={()=> router.push("/(tabs)/orderform")}>Create</Button>
+        </View>
+
+        <View style={styles.booking}>
+          <Text style={styles.deliveryText}>Recent Deliveries</Text>
+
+          <BookingHistoryCard
+            icon="calendar-outline"
+            iconBgColor="#E0F2FE"
+            iconColor="#0284C7"
+            title="Hotel Reservation"
+            subtitle="12 Jan 2026 • Lagos"
+            badgeText="Completed"
+            badgeColor="#16A34A"
+          />
+
+          <BookingHistoryCard
+            icon="airplane-outline"
+            iconBgColor="#FEF3C7"
+            iconColor="#D97706"
+            title="Flight to Abuja"
+            subtitle="2 Feb 2026 • Economy"
+            badgeText="Pending"
+            badgeColor="#F59E0B"
+          />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  mapContainer: {
+    width: "100%",
+    height: 300,
+    borderRadius: 20,
+    overflow: "hidden",
+    marginBottom: 20,
+    marginTop: 20,
   },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
+
+  mapImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
+
+  name: {
+    fontSize: 22,
+    fontWeight: "700",
+    // color: "white",
+  },
+
+  container: {
+    paddingBottom: 40,
+    backgroundColor: "white",
+    paddingVertical: 20,
+  },
+
+  booking: {
+    paddingHorizontal: 16,
+  },
+
+  deliveryText: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 12,
+  },
+  iconContainer: {
+    width: 46,
+    height: 46,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  header: {
+    flexDirection: "row",
+    padding: 18,
+    justifyContent: "space-between",
+
+  },
+  search: {
+    width: "100%",
+
+  }
 });

@@ -1,98 +1,187 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+// screens/HomeIntro.tsx
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  Dimensions,
+  Pressable,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Button } from "@/components/ui/button";
+import { router } from "expo-router";
+import { useAuth } from "../auth/authContext";
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+const { height } = Dimensions.get("window");
 
-export default function HomeScreen() {
+const SLIDES = [
+  {
+    image: require("../../assets/images/move1.png"),
+    title: "Yout Go-To parcel Solution",
+    subTitle: "+2,500 Successful delivery"
+
+  },
+  {
+    image: require("../../assets/images/move2.png"),
+    title: "Deliver Smarter, and Faster",
+    subTitle: "Trusted by +2,500 Happy Customer"
+
+  },
+  {
+    image: require("../../assets/images/move3.png"),
+    title: "Fast and Reliable",
+    subTitle: "Send and receive parcels anytime, anywhere"
+  },
+  {
+    image: require("../../assets/images/move4.png"),
+    title: "Welcome to Moveit!",
+    subTitle: "Welcome to Moveit!",
+  },
+];
+
+export default function HomeIntro() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const { userToken } = useAuth(); // 👈 get token from context
+
+  const handleNext = () => {
+    if (currentIndex < SLIDES.length - 1) {
+      setCurrentIndex((prev) => prev + 1);
+    } else {
+      // 👇 Decide where to go
+      if (userToken) {
+        router.replace("/(tabs)/profile"); // user logged in
+      } else {
+        router.replace("/screens/register"); // user not logged in
+      }
+    }
+  };
+
+
+  const handleSkip = () => {
+    router.replace("/(tabs)/profile");
+  };
+
+  const progress = ((currentIndex + 1) / SLIDES.length) * 100;
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <SafeAreaView style={styles.container}>
+      {/* Skip Button */}
+      <View style={styles.progressSkip}>
+        <Pressable style={styles.skipBtn} onPress={handleSkip}>
+          <Text style={styles.skipText}>Skip</Text>
+        </Pressable>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+        {/* Progress Bar */}
+        <View style={styles.progressTrack}>
+          <View style={[styles.progressFill, { width: `${progress}%` }]} />
+        </View>
+      </View>
+
+      {/* Background Image Section */}
+      <ImageBackground
+        source={SLIDES[currentIndex].image}
+        style={styles.imageSection}
+        resizeMode="cover"
+      >
+        <View style={styles.overlay} />
+      </ImageBackground>
+
+      {/* Bottom Content */}
+      <View style={styles.bottomSection}>
+        <Text style={styles.title}>
+          {SLIDES[currentIndex].title}
+        </Text>
+
+        <Text style={styles.subTitle}>
+          {SLIDES[currentIndex].subTitle}
+        </Text>
+
+        <Button onPress={handleNext}>
+          {currentIndex === SLIDES.length - 1
+            ? "Get Started"
+            : "Next"}
+        </Button>
+        <Button variant="ghost" onPress={handleNext}>
+          {currentIndex === SLIDES.length -1
+            ? "Already have an account? Sign in"
+            : ""}
+        </Button>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: "white",
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  progressSkip: {
+    flex: 1,
+    justifyContent: "space-between",
+
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  /* Skip */
+  skipBtn: {
+    position: "absolute",
+    right: 24,
+    top: 20,
+    zIndex: 10,
+  },
+  skipText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#64748B",
+  },
+
+  /* Progress Bar */
+  progressTrack: {
+    height: 6,
+    width: "90%",
+    backgroundColor: "#E2E8F0",
+    borderRadius: 10,
+    alignSelf: "center",
+    marginTop: 60,
+    overflow: "hidden",
+  },
+  progressFill: {
+    height: "100%",
+    backgroundColor: "#7C3AED",
+    borderRadius: 10,
+  },
+
+  /* Image Section */
+  imageSection: {
+    height: height * 0.6,
+    width: "100%",
+    justifyContent: "flex-end",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.15)", // subtle dark overlay
+  },
+
+  /* Bottom */
+  bottomSection: {
+    flex: 1,
+    paddingHorizontal: 24,
+    justifyContent: "space-between",
+    // paddingVertical: 30,
+    marginBottom: 14,
+    gap: 14,
+
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "700",
+    textAlign: "center",
+    color: "#0F172A",
+  },
+  subTitle: {
+    fontSize: 16,
+    fontWeight: "400",
+    textAlign: "center",
+    color: "#0F172A",
   },
 });

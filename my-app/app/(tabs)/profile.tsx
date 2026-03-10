@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   Pressable,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -13,6 +14,8 @@ import { router, useRouter } from "expo-router";
 import { Button } from "@/components/ui/button";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { useAuth } from "../auth/authContext";
+import BookingHistoryCard from "@/components/bookingHistoryCard";
+import PaymentCard from "@/components/paymentCard";
 
 const MENU_ITEMS = [
   {
@@ -42,65 +45,107 @@ export default function ProfileScreen() {
     router.replace("/screens/login");
   };
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Avatar Section */}
-      <View style={styles.header}>
-        <Image
-          source={{
-            uri: "https://i.pravatar.cc/300", // temporary avatar
-          }}
-          style={styles.avatar}
-        />
-        <Text style={styles.name}>John Doe</Text>
-        <Text style={styles.email}>johndoe@email.com</Text>
-      </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.header}>
+          <Image
+            source={{
+              uri: "https://i.pravatar.cc/300",
+            }}
+            style={styles.avatar}
+          />
+          <Text style={styles.name}>John Doe</Text>
+          <Text style={styles.email}>johndoe@email.com</Text>
+        </View>
 
-      {/* Menu Section */}
-      <View style={styles.menu}>
-        {MENU_ITEMS.map((item) => (
-          <Pressable
-            key={item.title}
-            style={styles.menuItem}
-          // onPress={() => router.push(item.route)}
+        {/* Menu Section */}
+        <View style={styles.menu}>
+          {MENU_ITEMS.map((item) => (
+            <Pressable
+              key={item.title}
+              style={styles.menuItem}
+            // onPress={() => router.push(item.route)}
+            >
+              <View style={styles.menuLeft}>
+                <Ionicons name={item.icon as any} size={22} color="#ED6C00" />
+                <Text style={styles.menuText}>{item.title}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color="#999" />
+            </Pressable>
+          ))}
+        </View>
+
+        <View style={styles.booking}>
+          <Text style={styles.bookingText}>Booking History</Text>
+
+          <BookingHistoryCard
+            icon="calendar-outline"
+            iconBgColor="#E0F2FE"
+            iconColor="#0284C7"
+            title="Hotel Reservation"
+            subtitle="12 Jan 2026 • Lagos"
+            badgeText="Completed"
+            badgeColor="#16A34A"
+          />
+
+          <BookingHistoryCard
+            icon="airplane-outline"
+            iconBgColor="#FEF3C7"
+            iconColor="#D97706"
+            title="Flight to Abuja"
+            subtitle="2 Feb 2026 • Economy"
+            badgeText="Pending"
+            badgeColor="#F59E0B"
+          />
+        </View>
+
+        <View style={styles.paymentSection}>
+          <Text style={styles.bookingText}>Payment Method</Text>
+
+          <PaymentCard
+            cardImage={require("../../assets/images/card.png")}
+            title="Visa •••• 1234"
+            subtitle="Expires 09/28"
+            isDefault
+            onRemove={() => console.log("Remove")}
+            onSetDefault={() => console.log("Set Default")}
+          />
+
+          <PaymentCard
+            cardImage={require("../../assets/images/card.png")}
+            title="Mastercard •••• 5678"
+            subtitle="Expires 11/27"
+            onRemove={() => console.log("Remove")}
+            onSetDefault={() => console.log("Set Default")}
+          />
+        </View>
+
+        <View style={styles.logoutContainer}>
+          <Button
+            variant="ghost"
+            onPress={handleLogout}
           >
-            <View style={styles.menuLeft}>
-              <Ionicons name={item.icon as any} size={22} color="#ED6C00" />
-              <Text style={styles.menuText}>{item.title}</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={20} color="#999" />
-          </Pressable>
-        ))}
-      </View>
-
-      <View style={styles.booking}>
-        <Text style={styles.bookingText}>Booking History</Text>
-      </View>
-
-      <View style={styles.logoutContainer}>
-        <Button
-          variant="ghost"
-          onPress={handleLogout}
-        // style={styles.logoutButton}
-        >
-          <IconSymbol
-            size={22}
-            color="#7F1945"
-            name="rectangle.portrait.and.arrow.right"
+            <IconSymbol
+              size={22}
+              color="#7F1945"
+              name="rectangle.portrait.and.arrow.right"
             />
-          <Text >Log out</Text>
-        </Button>
-      </View>
+            <Text >Log out</Text>
+          </Button>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    // backgroundColor: "#0F172A",
+    paddingBottom: 40,
+    backgroundColor: "white",
   },
-
-  /* Header */
   header: {
     alignItems: "center",
     paddingVertical: 40,
@@ -154,16 +199,18 @@ const styles = StyleSheet.create({
   },
   booking: {
     paddingHorizontal: 16,
-
     alignItems: "flex-start",
     fontSize: 16,
     fontWeight: "600",
   },
   bookingText: {
     paddingHorizontal: 16,
-
     alignItems: "flex-start",
     fontSize: 16,
     fontWeight: "600",
+  },
+  paymentSection: {
+    paddingHorizontal: 16,
+    marginTop: 24,
   }
 });
