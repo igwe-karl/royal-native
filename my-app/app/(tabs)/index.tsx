@@ -52,11 +52,17 @@ export default function HomeIntro() {
       if (userToken) {
         router.replace("/(tabs)/profile"); // user logged in
       } else {
+        console.log(process.env.NEXT_PUBLIC_API_URL, "url env")
+
         router.replace("/screens/register"); // user not logged in
       }
     }
   };
 
+
+  const handleLogin = () => {
+    router.replace("/screens/login");
+  };
 
   const handleSkip = () => {
     router.replace("/(tabs)/profile");
@@ -102,8 +108,8 @@ export default function HomeIntro() {
             ? "Get Started"
             : "Next"}
         </Button>
-        <Button variant="ghost" onPress={handleNext}>
-          {currentIndex === SLIDES.length -1
+        <Button variant="ghost" onPress={handleLogin}>
+          {currentIndex === SLIDES.length - 1
             ? "Already have an account? Sign in"
             : ""}
         </Button>
