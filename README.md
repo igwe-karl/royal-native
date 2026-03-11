@@ -1,25 +1,34 @@
-# royal-native
+# Project Title
 
 ## Project Description
 
-royal-native is a robust framework designed for developing high-performance mobile applications using native components. It provides developers with the tools and resources to create seamless user experiences while leveraging the capabilities of the underlying platform.
+This project aims to... (expanded description goes here)
 
-## Documentation Structure
+## Installation
 
-- **Installation**
-  - Prerequisites
-  - Installation Steps
-- **Getting Started**
-  - Basic Project Setup
-  - First Application
-- **Components**
-  - Overview of Available Components
-  - Usage Examples
-- **API Reference**
-  - Class and Method Descriptions
-- **Contributing**
-  - Guidelines for Contributions
-- **License**
-  - Licensing Information
-- **Contact**
-  - Support and Contact Information
+To install the project, follow these steps:
+1. Clone the repository:
+   
+   ```bash
+   git clone https://github.com/igwe-karl/royal-native.git
+   ```
+2. Navigate to the project directory:
+   
+   ```bash
+   cd royal-native
+   ```
+3. Install the dependencies:
+   
+   ```bash
+   npm install
+   ```
+
+## Getting Started
+
+To get started with the project, run the following command:
+
+```bash
+npm start
+```
+
+This will start the project and you can access it at... (details on how to access the project)
