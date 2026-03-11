@@ -8,6 +8,8 @@ export interface IUser {
   refer: string;
   pnumber: string;
   status: string;
+  profile_photo?: string;
+  wallet_balance?: string;
   transactions: ITransactions;
 }
 
