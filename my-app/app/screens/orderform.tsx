@@ -22,12 +22,9 @@ import { router } from "expo-router";
 
 export default function OrderFormScreen() {
   const { user } = useAuth();
-  console.log(user?.id, "user order is here")
-
 
   const { width } = Dimensions.get("window");
 
-  // ------------------ PRICE ESTIMATOR ------------------
   const calculateDistanceKm = (lat1: number, lon1: number, lat2: number, lon2: number) => {
     const toRad = (v: number) => (v * Math.PI) / 180;
     const R = 6371;
@@ -298,7 +295,10 @@ export default function OrderFormScreen() {
         return;
       }
       showToast("Order created successfully! 🎉", "success");
-      router.push({ pathname: "/(tabs)/order-details", params: { orderId: String(orderId) } });
+      router.push({
+        pathname: "/screens/orderList",
+        params: { orderId: String(orderId) },
+      });
     } catch (error) {
       console.error("Failed to create order", error);
       showToast("Failed to create order. Please try again.", "error");

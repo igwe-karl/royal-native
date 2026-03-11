@@ -10,23 +10,30 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 type OrderCardProps = {
-  avatar: string;
-  name: string;
-  rating: number;
-  distance: string;
-  duration: string;
-  amount: string;
-  onAccept: () => void;
-  onReject: () => void;
+  offerId: string;
+  order_id: string;
+  offerPrice?: string
+  carrierId?: string;
+  carrier_email?: string
+  carrier_name?: string;
+  rating?: number;
+  distance?: string;
+  duration?: string;
+  amount: number | string;
+  avatar?: string;
+  status?: string;
+  onAccept?: () => void;
+  onReject?: () => void;
 };
 
 export default function OrderCard({
   avatar,
-  name,
+  carrier_name,
   rating,
   distance,
   duration,
   amount,
+  offerPrice,
   onAccept,
   onReject,
 }: OrderCardProps) {
@@ -37,11 +44,11 @@ export default function OrderCard({
 
       {/* Middle: Info */}
       <View style={styles.info}>
-        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.name}>{carrier_name}</Text>
 
         <View style={styles.detailsRow}>
           <Ionicons name="star" size={16} color="#FFD700" />
-          <Text style={styles.rating}>{rating.toFixed(1)}</Text>
+          {/* <Text style={styles.rating}>{rating.toFixed(1)}</Text> */}
           <Text style={styles.dot}>•</Text>
           <Text style={styles.detail}>{distance}</Text>
           <Text style={styles.dot}>•</Text>

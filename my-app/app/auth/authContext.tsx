@@ -22,7 +22,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   >("loading");
   const [user, setUser] = useState<IUser | null>(null);
 
-  console.log(user, "user is here")
   useEffect(() => {
     const initAuth = async () => {
       try {
@@ -39,8 +38,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const res = await api.get("/users/auth/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
-
-        setUser(res.data);
+        
+        setUser(res.data.user);
         setAuthState("authenticated");
 
       } catch (error) {

@@ -40,6 +40,8 @@ export default function OrderDetailsScreen() {
         };
     }, [orderId]);
 
+    // console.log(order, "dtails")
+
     if (loading) {
         return (
             <SafeAreaView style={styles.container}>

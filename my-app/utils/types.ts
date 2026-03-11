@@ -62,9 +62,12 @@ export interface IOrders {
 
 /** Offer from Firebase Realtime Database (carrier offers for orders) */
 export interface IOffer {
-  id: string;
-  order_id?: string;
-  name: string;
+  offerId: string;
+  order_id: string;
+  offerPrice?: string
+  carrierId?: string;
+  carrier_email?: string
+  carrier_name?: string;
   rating?: number;
   distance?: string;
   duration?: string;

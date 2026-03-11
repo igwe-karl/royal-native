@@ -26,9 +26,9 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="explore"
+          name="Wallet"
           options={{
-            title: 'Explore',
+            title: 'Wallet',
             tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
           }}
         />
