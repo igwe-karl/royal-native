@@ -67,7 +67,7 @@ export default function OrderListScreen() {
         if (offer) {
             const orderId = offer.order_id ?? offer.id;
             router.push({
-                pathname: "/screens/order-details",
+                pathname: "./order-details",
                 params: { orderId },
             });
         }

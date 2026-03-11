@@ -296,7 +296,7 @@ export default function OrderFormScreen() {
       }
       showToast("Order created successfully! 🎉", "success");
       router.push({
-        pathname: "/screens/orderList",
+        pathname: "./orderList",
         params: { orderId: String(orderId) },
       });
     } catch (error) {
