@@ -21,25 +21,26 @@ const MENU_ITEMS = [
   {
     title: "Settings",
     icon: "settings-outline",
-    route: "/(tabs)/profile",
+    route: "/(tabs)/profile" as const,
   },
   {
     title: "My Addresses",
     icon: "location-outline",
-    route: "/(tabs)/explore",
+    route: "/(tabs)/wallet" as const,
   },
   {
     title: "Orders",
     icon: "receipt-outline",
-    route: "/(tabs)/orders",
+    route: "/screens/ordersList" as const,
   },
 ];
 
 export default function ProfileScreen() {
 
-  const { logout } = useAuth();
-  const router = useRouter();
+  const { logout, user } = useAuth();
 
+  console.log(user, "users detais")
+  const router = useRouter();
   const handleLogout = async () => {
     await logout();
     router.replace("/screens/login");
@@ -57,8 +58,8 @@ export default function ProfileScreen() {
             }}
             style={styles.avatar}
           />
-          <Text style={styles.name}>John Doe</Text>
-          <Text style={styles.email}>johndoe@email.com</Text>
+          <Text style={styles.name}>{user?.fname}  {user?.lname}</Text>
+          <Text style={styles.email}>{user?.email}</Text>
         </View>
 
         {/* Menu Section */}
@@ -67,7 +68,7 @@ export default function ProfileScreen() {
             <Pressable
               key={item.title}
               style={styles.menuItem}
-            // onPress={() => router.push(item.route)}
+              // onPress={() => router.push(item.route)}
             >
               <View style={styles.menuLeft}>
                 <Ionicons name={item.icon as any} size={22} color="#ED6C00" />
