@@ -20,8 +20,8 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "usesCleartextTraffic": true
-
+      "usesCleartextTraffic": true,
+      "package": "com.kali4478.myapp"
     },
     "web": {
       "output": "static",
@@ -46,6 +46,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "c38d15ac-27ef-4bed-9007-f8790fc9791a"
+      }
+    },
+    "owner": "kali4478"
   }
 }
