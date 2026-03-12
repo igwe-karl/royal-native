@@ -49,7 +49,7 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
-    </AuthGuard>
+     </AuthGuard>
 
   );
 }

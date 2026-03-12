@@ -1,13 +1,16 @@
 import { Image } from 'expo-image';
-import { StyleSheet, View, Text, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../auth/authContext';
 import { Ionicons } from '@expo/vector-icons';
 import BankCard from '@/components/bankCard';
 import { Button } from '@/components/ui/button';
+import React, { useState } from 'react';
+import WalletForm from '@/components/walletForm';
 
 export default function TabTwoScreen() {
   const { user } = useAuth()
+  const [activeAction, setActiveAction] = useState<"fund" | "withdraw" | null>(null);
 
   console.log(user, "user")
 
@@ -31,15 +34,42 @@ export default function TabTwoScreen() {
           </View>
 
           <View style={styles.walletContainer}>
-            <View style={styles.fund}>
-              <Ionicons name="wallet" size={22} color="#7F1945" /><Text style={styles.fundText}>Fund wallet</Text></View>
-            <View style={styles.withdraw}>
-              <Ionicons name="wallet" size={22} color="white" /><Text style={styles.withdrawText}>
-                Withdraw funds
-              </Text>
-            </View>
+            <TouchableOpacity
+              style={[
+                styles.fund,
+                activeAction === "fund" && styles.activeCard,
+              ]}
+              onPress={() =>
+                setActiveAction((prev) => (prev === "fund" ? null : "fund"))
+              }
+            >
+              <Ionicons name="wallet" size={22} color="#7F1945" />
+              <Text style={styles.fundText}>Fund wallet</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.withdraw,
+                activeAction === "withdraw" && styles.activeCardDark,
+              ]}
+              onPress={() =>
+                setActiveAction((prev) =>
+                  prev === "withdraw" ? null : "withdraw"
+                )
+              }
+            >
+              <Ionicons name="wallet" size={22} color="white" />
+              <Text style={styles.withdrawText}>Withdraw funds</Text>
+            </TouchableOpacity>
           </View>
         </View>
+
+        {activeAction && (
+          <WalletForm
+            mode={activeAction}
+            onClose={() => setActiveAction(null)}
+          />
+        )}
 
         <View style={styles.bankCard}>
           <Text>Bank Account</Text>
@@ -122,6 +152,14 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 16,
     paddingHorizontal: 24
+  },
+  activeCard: {
+    borderWidth: 2,
+    borderColor: "#F97316",
+  },
+  activeCardDark: {
+    borderWidth: 2,
+    borderColor: "#F97316",
   },
   withdrawText: {
     fontSize: 14,

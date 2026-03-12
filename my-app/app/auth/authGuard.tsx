@@ -1,6 +1,8 @@
 // app/auth/authGuard.tsx
 import { ActivityIndicator, View, Text } from "react-native";
 import { useAuth } from "./authContext";
+import { Button } from "@/components/ui/button";
+import { router } from "expo-router";
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { authState } = useAuth();
@@ -14,7 +16,20 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   }
 
   if (authState === "unauthenticated") {
-    return <Text>Please login</Text>; // or redirect to a login screen using expo-router
+    return <View style={{ backgroundColor: "white", flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Button onPress={() => router.push({
+        pathname: "./screens/login",
+      })}
+        variant="primary">
+        <Text style={{
+          // color: "#000",
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: 18
+        }}>Please login</Text>
+      </Button>
+
+    </View >; // or redirect to a login screen using expo-router
   }
 
   // authenticated

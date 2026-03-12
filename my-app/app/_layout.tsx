@@ -9,6 +9,7 @@ import { AuthProvider } from './auth/authContext';
 import { useFonts } from "expo-font";
 import { ActivityIndicator, View, Text } from 'react-native';
 import { Fonts } from '@/constants/theme';
+import AuthGuard from './auth/authGuard';
 
 
 (Text as any).defaultProps = (Text as any).defaultProps || {};
@@ -37,15 +38,17 @@ export default function RootLayout() {
     );
   }
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AuthProvider>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-        </Stack>
-        <StatusBar style="auto" />
-        <Toast />
-      </AuthProvider>
-    </ThemeProvider>
+    <AuthGuard>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <AuthProvider>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+          </Stack>
+          <StatusBar style="auto" />
+          <Toast />
+        </AuthProvider>
+      </ThemeProvider>
+    </AuthGuard>
   );
 }
