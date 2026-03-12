@@ -1,104 +1,109 @@
 import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { Collapsible } from '@/components/ui/collapsible';
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuth } from '../auth/authContext';
+import { Ionicons } from '@expo/vector-icons';
+import BankCard from '@/components/bankCard';
+import { Button } from '@/components/ui/button';
+import React, { useState } from 'react';
+import WalletForm from '@/components/walletForm';
 
 export default function TabTwoScreen() {
+  const { user } = useAuth()
+  const [activeAction, setActiveAction] = useState<"fund" | "withdraw" | null>(null);
+
+  console.log(user, "user")
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
-        </ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+    <SafeAreaView style={{ flex: 1 }}>
+
+      <ScrollView
+        // contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={true}>
+
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Image
+              source={{
+                uri: "https://i.pravatar.cc/300",
+              }}
+              style={styles.avatar}
+            />
+            <Text style={styles.name}>{user?.fname}  {user?.lname}</Text>
+            <Text style={styles.wallet_balance}>{user?.wallet_balance}</Text>
+          </View>
+
+          <View style={styles.walletContainer}>
+            <TouchableOpacity
+              style={[
+                styles.fund,
+                activeAction === "fund" && styles.activeCard,
+              ]}
+              onPress={() =>
+                setActiveAction((prev) => (prev === "fund" ? null : "fund"))
+              }
+            >
+              <Ionicons name="wallet" size={22} color="#7F1945" />
+              <Text style={styles.fundText}>Fund wallet</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.withdraw,
+                activeAction === "withdraw" && styles.activeCardDark,
+              ]}
+              onPress={() =>
+                setActiveAction((prev) =>
+                  prev === "withdraw" ? null : "withdraw"
+                )
+              }
+            >
+              <Ionicons name="wallet" size={22} color="white" />
+              <Text style={styles.withdrawText}>Withdraw funds</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {activeAction && (
+          <WalletForm
+            mode={activeAction}
+            onClose={() => setActiveAction(null)}
+          />
+        )}
+
+        <View style={styles.bankCard}>
+          <Text>Bank Account</Text>
+          <BankCard
+            cardImage={require("../../assets/images/card.png")}
+            title="Visa •••• 1234"
+            subtitle="Expires 09/28"
+
+          />
+          <BankCard
+            cardImage={require("../../assets/images/card.png")}
+            title="Master •••• 1234"
+            subtitle="Expires 09/28"
+
+          />
+
+          <Button><Ionicons name="wallet" size={22} color="#ffff" />
+            Add New card</Button>
+        </View>
+
+      </ScrollView >
+    </SafeAreaView >
+
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    paddingBottom: 40,
+    backgroundColor: "#7F1945",
+    borderBottomLeftRadius: 40,
+    borderBottomEndRadius: 40,
+
+  },
   headerImage: {
     color: '#808080',
     bottom: -90,
@@ -108,5 +113,79 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     gap: 8,
+    padding: 18,
+    justifyContent: "space-between"
   },
+  header: {
+    alignItems: "center",
+    paddingVertical: 40,
+    borderBottomWidth: 1,
+    borderBottomColor: "#1E293B",
+  },
+  avatar: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    marginBottom: 16,
+  },
+  name: {
+    fontSize: 22,
+    fontWeight: "700",
+    color: "white",
+  },
+  walletContainer: {
+    flexDirection: 'row',
+    // gap: 8,
+    padding: 18,
+    justifyContent: "space-between"
+  },
+  wallet_balance: {
+    fontSize: 22,
+    fontWeight: "700",
+    color: "white",
+  },
+  withdraw: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: "black",
+    borderRadius: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 24
+  },
+  activeCard: {
+    borderWidth: 2,
+    borderColor: "#F97316",
+  },
+  activeCardDark: {
+    borderWidth: 2,
+    borderColor: "#F97316",
+  },
+  withdrawText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "white",
+  },
+  fund: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: "white",
+    borderRadius: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 24
+  },
+  fundText: {
+    fontSize: 14,
+    fontWeight: "600",
+    // color: "white",
+  },
+  bankCard: {
+    padding: 18,
+    marginVertical: -8,
+    marginHorizontal: 10,
+    backgroundColor: "#FDF2F8",
+    borderRadius: 22,
+  },
+
 });

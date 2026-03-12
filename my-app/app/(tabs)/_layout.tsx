@@ -6,6 +6,7 @@ import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import AuthGuard from '../auth/authGuard';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -26,28 +27,29 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="Wallet"
-          options={{
-            title: 'Wallet',
-            tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-          }}
-        />
-        <Tabs.Screen
           name="orders"
           options={{
             title: 'Orders',
-            tabBarIcon: ({ color }) => <IconSymbol size={28} name="list.bullet" color={color} />,
+            tabBarIcon: ({ color }) => <Ionicons name="storefront" size={22} color="#7F1945" />,
           }}
         />
+        <Tabs.Screen
+          name="wallet"
+          options={{
+            title: 'Wallet',
+            tabBarIcon: ({ color }) => <Ionicons name="wallet" size={22} color="#7F1945" />,
+          }}
+        />
+
         <Tabs.Screen
           name="profile"
           options={{
             title: 'Profile',
-            tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.crop.circle.badge.plus" color={color} />,
+            tabBarIcon: ({ color }) => <Ionicons name="person" size={22} color="#7F1945" />,
           }}
         />
       </Tabs>
-    </AuthGuard>
+     </AuthGuard>
 
   );
 }
